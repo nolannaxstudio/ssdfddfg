@@ -116,20 +116,6 @@ ul{margin:5px 0 0 20px}
   </div>
 
   <div class="section">
-    <h3>👻 Actions admin</h3>
-    <button onclick="send('spawnMonster')">Spawn monstre</button>
-    <button onclick="send('killAll')">Kill all</button>
-    <button onclick="send('fogOn')">Brouillard ON</button>
-    <button onclick="send('fogOff')">Brouillard OFF</button>
-  </div>
-
-  <div class="section">
-    <h3>📢 Message global</h3>
-    <input id="msg" placeholder="Message à envoyer" />
-    <button onclick="send('broadcast')">Envoyer</button>
-  </div>
-
-  <div class="section">
     <h3>🛑 Règles anti admin abuse</h3>
     <ul>
       <li>Pas de spam de commandes</li>
@@ -146,36 +132,25 @@ ul{margin:5px 0 0 20px}
 </div>
 
 <script>
-/*************************************
-* CONFIG (INTEGREE DANS INDEX.HTML)
-*************************************/
-const ADMIN_CODE = "Backrooms-ADMIN-2025"; // ✅ TON CODE ICI DIRECTEMENT
+const ADMIN_CODE = "Backrooms-ADMIN-2025";
 const EVENT_DATE = new Date("2025-12-06T15:00:00");
 let connected = false;
 
-/*************************************
-* MASQUE AVEC POINTS •
-*************************************/
 function maskInput(){
   const input = document.getElementById('adminPass');
   const real = document.getElementById('realPass');
 
   if(input.value.length > real.value.length){
     real.value += input.value[input.value.length - 1];
-  } 
-  else if(input.value.length < real.value.length){
+  } else if(input.value.length < real.value.length){
     real.value = real.value.slice(0, -1);
   }
 
   input.value = '•'.repeat(real.value.length);
 }
 
-/*************************************
-* LOGIN
-*************************************/
 function login(){
   const pass = document.getElementById('realPass').value;
-
   if(pass === ADMIN_CODE){
     document.getElementById('loginPanel').classList.add('hidden');
     document.getElementById('adminPanel').classList.remove('hidden');
@@ -186,54 +161,22 @@ function login(){
   }
 }
 
-/*************************************
-* TIMER EVENEMENT
-*************************************/
 function updateCountdown(){
   const now = new Date();
   const diff = EVENT_DATE - now;
-
   if(diff <= 0){
     document.getElementById('countdown').textContent = "🚨 EVENT EN COURS 🚨";
     return;
   }
-
   const d = Math.floor(diff / (1000*60*60*24));
   const h = Math.floor((diff / (1000*60*60)) % 24);
   const m = Math.floor((diff / (1000*60)) % 60);
   const s = Math.floor((diff / 1000) % 60);
-
-  document.getElementById('countdown').textContent =
-    d + "j " + h + "h " + m + "m " + s + "s";
+  document.getElementById('countdown').textContent = d + "j " + h + "h " + m + "m " + s + "s";
 }
 setInterval(updateCountdown,1000);
 updateCountdown();
 
-/*************************************
-* ENVOI (A CONNECTER A TON SCRIPT)
-*************************************/
-function send(action){
-  if(!connected) return;
-
-  let data = { action: action };
-  if(action === 'broadcast'){
-    data.message = document.getElementById('msg').value;
-  }
-
-  /*
-  fetch("TON_URL_WEBHOOK_OU_SERVEUR",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  })
-  */
-
-  log("✅ Commande effectuée : " + action);
-}
-
-/*************************************
-* LOG
-*************************************/
 function log(text){
   const div = document.createElement('div');
   div.textContent = text;
