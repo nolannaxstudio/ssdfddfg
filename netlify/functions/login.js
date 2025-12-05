@@ -1,11 +1,9 @@
 let connectedUsers = [];
 
-exports.handler = async function(event, context){
+exports.handler = async function(event) {
   if(event.httpMethod === "POST"){
     const { user, code } = JSON.parse(event.body);
-
-    // Vérifier mdp (simple)
-    if(code === "BACKROOMS-ADMIN-2025"){
+    if(code === "Backrooms-ADMIN-2025"){
       if(!connectedUsers.includes(user)) connectedUsers.push(user);
       return {
         statusCode: 200,
@@ -17,8 +15,11 @@ exports.handler = async function(event, context){
   }
 
   if(event.httpMethod === "GET"){
-    return { statusCode: 200, body: JSON.stringify({ users: connectedUsers }) };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ users: connectedUsers })
+    }
   }
 
-  return { statusCode: 405, body: "Method Not Allowed" };
+  return { statusCode: 405, body: "Method Not Allowed" }
 }
