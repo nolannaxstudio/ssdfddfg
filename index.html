@@ -1,105 +1,235 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Backrooms Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body{background:#111;color:white;font-family:Arial;padding:20px;}
-#loginBox, #adminPanel{max-width:400px;margin:50px auto;padding:20px;background:#222;border-radius:10px;}
-input, button{width:100%;padding:10px;margin-top:10px;border-radius:5px;border:none;}
-button{background:#00ccff;cursor:pointer;font-weight:bold;}
-button:hover{background:#0099cc;}
-#logs{background:black;padding:10px;height:200px;overflow-y:auto;margin-top:15px;}
-.logItem{border-bottom:1px solid #333;padding:3px;font-size:14px;}
+*{box-sizing:border-box;font-family:Orbitron, sans-serif;}
+body{
+  margin:0;
+  background:radial-gradient(circle at top, #2b2b00,#000000);
+  color:#f5f5a0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+.panel{
+  width:95%;
+  max-width:950px;
+  background:rgba(0,0,0,0.85);
+  border:2px solid #d6d600;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 0 30px #000;
+  position:relative;
+  overflow:hidden;
+}
+.panel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,0,0.03) 0px,rgba(255,255,0,0.03) 1px,transparent 2px,transparent 4px);
+  animation:glitch 0.15s infinite;
+}
+@keyframes glitch{0%{transform:translate(0)}20%{transform:translate(-1px,1px)}40%{transform:translate(1px,-1px)}60%{transform:translate(-1px,0)}80%{transform:translate(1px,1px)}100%{transform:translate(0)}}
+h1{text-align:center;margin-bottom:10px;}
+.section{margin-top:15px;padding-top:10px;border-top:1px dashed #d6d60055;}
+button{
+  background:#d6d600;
+  border:none;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  width:100%;
+}
+button:hover{background:#ffff00;}
+input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin:5px 0 10px;
+  background:#000;
+  color:#d6d600;
+  text-align:center;
+  letter-spacing:3px;
+  font-size:18px;
+}
+#log{
+  background:black;
+  padding:10px;
+  border-radius:10px;
+  height:150px;
+  overflow:auto;
+  font-size:13px;
+}
+.hidden{display:none;}
+.timer{font-size:18px;text-align:center;margin-top:8px;}
+.small{font-size:13px;opacity:0.8;}
+ul{margin:5px 0 0 20px;}
 </style>
 </head>
 <body>
 
-<div id="loginBox">
-<h2>🔐 Admin Login</h2>
-<input type="text" id="username" placeholder="Nom d'utilisateur">
-<input type="password" id="code" placeholder="Code admin">
-<button onclick="login()">Se connecter</button>
-<p id="msg" style="color:red;text-align:center;"></p>
+<!-- LOGIN -->
+<div class="panel" id="loginPanel">
+  <h1>🔒 Accès Admin — Backrooms</h1>
+  <p class="small">Connexion + nom d'utilisateur (logs côté serveur)</p>
+  <input type="text" id="username" placeholder="Nom d'utilisateur">
+  <input type="text" id="fakeInput" placeholder="Code admin" oninput="maskInput()">
+  <input type="hidden" id="realInput">
+  <button onclick="login()">Entrer</button>
+  <div id="loginMsg" style="text-align:center;margin-top:5px;"></div>
+  <div class="section">
+    <h3>⏳ Prochain événement admin</h3>
+    <p style="text-align:center">06/12/2025 à 15h</p>
+    <div class="timer" id="countdown">Chargement...</div>
+  </div>
 </div>
 
-<div id="adminPanel" style="display:none;">
-<h2>Admin : <span id="userDisplay"></span></h2>
-<h3>Commandes /music</h3>
-<textarea readonly>/music 1234
-/music 5678
-/music 9101112</textarea>
+<!-- ADMIN PANEL -->
+<div class="panel hidden" id="adminPanel">
+  <h1>🎮 Backrooms - Admins</h1>
+  <button onclick="logout()">🔓 Déconnexion</button>
 
-<h3>📝 Logs</h3>
-<div id="logs"></div>
+  <div class="section">
+    <h3>👤 Admins autorisés</h3>
+    <ul>
+      <li>nolannax</li>
+      <li>jonahjojoyt</li>
+      <li>Admin_03</li>
+    </ul>
+  </div>
 
-<h3>👥 Utilisateurs connectés</h3>
-<ul id="userList"></ul>
+  <div class="section">
+    <h3>🎵 Musique ( /music ID )</h3>
+    <ul>
+      <li>Its raining tacos — /music 142376088</li>
+      <li>Nyan Cat — /music 9067256917</li>
+      <li>PASSO BEM SOLTO — /music 132928052197918</li>
+    </ul>
+  </div>
 
-<button onclick="logout()">Se déconnecter</button>
+  <div class="section">
+    <h3>📜 Logs de connexion</h3>
+    <div id="log"></div>
+  </div>
+
+  <div class="section">
+    <h3>👥 Utilisateurs connectés</h3>
+    <ul id="usersList"></ul>
+  </div>
 </div>
 
 <script>
-async function login(){
-  const user = document.getElementById('username').value.trim();
-  const code = document.getElementById('code').value.trim();
-  if(!user){document.getElementById('msg').textContent="Entre un pseudo"; return;}
+// === PARAMÈTRES ===
+const ADMIN_CODE = "Backrooms-ADMIN-2025";
+const EVENT_DATE = new Date("2025-12-06T15:00:00");
 
-  const res = await fetch('/.netlify/functions/login', {
-    method:'POST',
-    body: JSON.stringify({ user, code })
+// === MASQUAGE •••• ===
+function maskInput(){
+  const fake = document.getElementById("fakeInput");
+  const real = document.getElementById("realInput");
+  if(fake.value.length > real.value.length){
+    real.value += fake.value[fake.value.length-1];
+  }else{
+    real.value = real.value.slice(0,-1);
+  }
+  fake.value = "•".repeat(real.value.length);
+}
+
+// === LOGIN ===
+async function login(){
+  const username = document.getElementById("username").value.trim();
+  const code = document.getElementById("realInput").value.trim();
+  if(!username){ document.getElementById("loginMsg").innerText="Entre un pseudo"; return; }
+
+  const res = await fetch("/.netlify/functions/login", {
+    method:"POST",
+    body: JSON.stringify({ user: username, code: code })
   });
   const data = await res.json();
-
   if(data.success){
-    document.getElementById('loginBox').style.display='none';
-    document.getElementById('adminPanel').style.display='block';
-    document.getElementById('userDisplay').textContent = user;
+    document.getElementById("loginPanel").classList.add("hidden");
+    document.getElementById("adminPanel").classList.remove("hidden");
+    document.getElementById("userDisplay")?.remove();
+    const h2 = document.createElement("h2");
+    h2.id="userDisplay";
+    h2.textContent=username;
+    document.getElementById("adminPanel").prepend(h2);
+    addLog(username+" connecté");
     updateUsers();
-    addLog(user+" connecté");
   } else {
-    document.getElementById('msg').textContent="❌ Mauvais code";
+    document.getElementById("loginMsg").innerText="❌ Mauvais code";
   }
 }
 
+// === LOGS ===
 async function addLog(msg){
-  const user = document.getElementById('userDisplay').textContent;
-  await fetch('/.netlify/functions/logs', {
-    method:'POST',
-    body: JSON.stringify({ user, message: msg })
+  const user = document.getElementById("userDisplay").textContent;
+  await fetch("/.netlify/functions/logs", {
+    method:"POST",
+    body: JSON.stringify({ user: user, message: msg })
   });
-  showLogs();
+  loadLogs();
 }
 
-async function showLogs(){
-  const res = await fetch('/.netlify/functions/logs');
-  const data = await res.json();
-  const logsDiv = document.getElementById('logs');
-  logsDiv.innerHTML = '';
-  data.forEach(l=>{
-    const div=document.createElement('div');
-    div.className='logItem';
+async function loadLogs(){
+  const res = await fetch("/.netlify/functions/logs");
+  const logs = await res.json();
+  const logDiv = document.getElementById("log");
+  logDiv.innerHTML="";
+  logs.forEach(l=>{
+    const div = document.createElement("div");
     div.textContent=`[${l.time}] ${l.user} : ${l.message}`;
-    logsDiv.appendChild(div);
+    logDiv.appendChild(div);
   });
 }
 
+// === UTILISATEURS CONNECTÉS ===
 async function updateUsers(){
-  const res = await fetch('/.netlify/functions/login');
+  const res = await fetch("/.netlify/functions/login");
   const data = await res.json();
-  const ul = document.getElementById('userList');
-  ul.innerHTML='';
+  const ul = document.getElementById("usersList");
+  ul.innerHTML="";
   data.users.forEach(u=>{
-    const li=document.createElement('li'); li.textContent=u; ul.appendChild(li);
+    const li = document.createElement("li");
+    li.textContent=u;
+    ul.appendChild(li);
   });
 }
 
+// === LOGOUT ===
 function logout(){
-  const user = document.getElementById('userDisplay').textContent;
+  const user = document.getElementById("userDisplay").textContent;
   addLog(user+" s'est déconnecté");
-  document.getElementById('adminPanel').style.display='none';
-  document.getElementById('loginBox').style.display='block';
+  document.getElementById("adminPanel").classList.add("hidden");
+  document.getElementById("loginPanel").classList.remove("hidden");
 }
+
+// === TIMER ===
+function updateCountdown(){
+  const now = new Date();
+  const diff = EVENT_DATE - now;
+  if(diff <= 0){ document.getElementById("countdown").innerText="🚨 EVENT EN COURS 🚨"; return; }
+  const d=Math.floor(diff/(1000*60*60*24));
+  const h=Math.floor((diff/(1000*60*60))%24);
+  const m=Math.floor((diff/(1000*60))%60);
+  const s=Math.floor((diff/1000)%60);
+  document.getElementById("countdown").innerText=`${d}j ${h}h ${m}m ${s}s`;
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+// === AUTO LOAD LOGS / USERS ===
+setInterval(()=>{ loadLogs(); updateUsers(); },5000);
 </script>
 </body>
 </html>
