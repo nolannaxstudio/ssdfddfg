@@ -1,0 +1,24 @@
+let connectedUsers = [];
+
+exports.handler = async function(event, context){
+  if(event.httpMethod === "POST"){
+    const { user, code } = JSON.parse(event.body);
+
+    // Vérifier mdp (simple)
+    if(code === "BACKROOMS-ADMIN-2025"){
+      if(!connectedUsers.includes(user)) connectedUsers.push(user);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success:true, users: connectedUsers })
+      }
+    } else {
+      return { statusCode: 401, body: JSON.stringify({ success:false }) };
+    }
+  }
+
+  if(event.httpMethod === "GET"){
+    return { statusCode: 200, body: JSON.stringify({ users: connectedUsers }) };
+  }
+
+  return { statusCode: 405, body: "Method Not Allowed" };
+}
