@@ -6,74 +6,87 @@
 <title>Backrooms Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;font-family:Orbitron, sans-serif;}
-body{
-  margin:0;
-  background:radial-gradient(circle at top, #2b2b00,#000000);
-  color:#f5f5a0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-  padding:20px;
-}
-.panel{
-  width:95%;
-  max-width:950px;
-  background:rgba(0,0,0,0.85);
-  border:2px solid #d6d600;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 0 30px #000;
-  position:relative;
-  overflow:hidden;
-}
-.panel::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:repeating-linear-gradient(0deg,rgba(255,255,0,0.03) 0px,rgba(255,255,0,0.03) 1px,transparent 2px,transparent 4px);
-  animation:glitch 0.15s infinite;
-}
-@keyframes glitch{0%{transform:translate(0)}20%{transform:translate(-1px,1px)}40%{transform:translate(1px,-1px)}60%{transform:translate(-1px,0)}80%{transform:translate(1px,1px)}100%{transform:translate(0)}}
-h1{text-align:center;margin-bottom:10px;}
-.section{margin-top:15px;padding-top:10px;border-top:1px dashed #d6d60055;}
-button{
-  background:#d6d600;
-  border:none;
-  padding:12px;
-  margin-top:10px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-  width:100%;
-}
-button:hover{background:#ffff00;}
-input, select{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  margin:5px 0 10px;
-  background:#000;
-  color:#d6d600;
-  text-align:center;
-  letter-spacing:3px;
-  font-size:18px;
-}
-#log{
-  background:black;
-  padding:10px;
-  border-radius:10px;
-  height:150px;
-  overflow:auto;
-  font-size:13px;
-}
-.hidden{display:none;}
-.timer{font-size:18px;text-align:center;margin-top:8px;}
-.small{font-size:13px;opacity:0.8;}
-ul{margin:5px 0 0 20px;}
+  * { box-sizing: border-box; font-family: Orbitron, sans-serif; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #2b2b00, #000000);
+    color: #f5f5a0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .panel {
+    width: 95%;
+    max-width: 950px;
+    background: rgba(0,0,0,0.85);
+    border: 2px solid #d6d600;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 0 30px #000;
+    position: relative;
+    overflow: hidden;
+  }
+  .panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255,255,0,0.03) 0px,
+      rgba(255,255,0,0.03) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+    animation: glitch 0.15s infinite;
+  }
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-1px, 1px); }
+    40% { transform: translate(1px, -1px); }
+    60% { transform: translate(-1px, 0); }
+    80% { transform: translate(1px, 1px); }
+    100% { transform: translate(0); }
+  }
+  h1 { text-align: center; margin-bottom: 10px; }
+  .section { margin-top: 15px; padding-top: 10px; border-top: 1px dashed #d6d60055; }
+  button {
+    background: #d6d600;
+    border: none;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+  }
+  button:hover { background: #ffff00; }
+  input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    margin: 5px 0 10px;
+    background: #000;
+    color: #d6d600;
+    text-align: center;
+    letter-spacing: 3px;
+    font-size: 18px;
+  }
+  #log {
+    background: black;
+    padding: 10px;
+    border-radius: 10px;
+    height: 150px;
+    overflow: auto;
+    font-size: 13px;
+  }
+  .hidden { display: none; }
+  .timer { font-size: 18px; text-align: center; margin-top: 8px; }
+  .small { font-size: 13px; opacity: 0.8; }
+  ul { margin: 5px 0 0 20px; }
 </style>
 </head>
 <body>
@@ -81,17 +94,9 @@ ul{margin:5px 0 0 20px;}
 <!-- LOGIN -->
 <div class="panel" id="loginPanel">
   <h1>🔒 Accès Admin — Backrooms</h1>
-  <p class="small">Connexion + nom d'utilisateur (logs côté serveur)</p>
-
-  <select id="username">
-    <option value="">Sélectionne ton nom</option>
-    <option value="nolannax">nolannax</option>
-    <option value="jonahjojoyt">jonahjojoyt</option>
-  </select>
-
+  <p class="small">Code intégré</p>
   <input type="text" id="fakeInput" placeholder="Code admin" oninput="maskInput()">
   <input type="hidden" id="realInput">
-
   <button onclick="login()">Entrer</button>
   <div id="loginMsg" style="text-align:center;margin-top:5px;"></div>
 
@@ -129,11 +134,6 @@ ul{margin:5px 0 0 20px;}
     <h3>📜 Logs de connexion</h3>
     <div id="log"></div>
   </div>
-
-  <div class="section">
-    <h3>👥 Utilisateurs connectés</h3>
-    <ul id="usersList"></ul>
-  </div>
 </div>
 
 <script>
@@ -141,107 +141,86 @@ ul{margin:5px 0 0 20px;}
 const ADMIN_CODE = "Backrooms-ADMIN-2025";
 const EVENT_DATE = new Date("2025-12-06T15:00:00");
 
+// === NOUVEL ONGLET = PAS DE SESSION ===
+if (!sessionStorage.getItem("tabOpen")) {
+  sessionStorage.setItem("tabOpen", "true");
+  localStorage.removeItem("connected");
+}
+
 // === MASQUAGE •••• ===
-function maskInput(){
+function maskInput() {
   const fake = document.getElementById("fakeInput");
   const real = document.getElementById("realInput");
-  if(fake.value.length > real.value.length){
-    real.value += fake.value[fake.value.length-1];
-  }else{
-    real.value = real.value.slice(0,-1);
+  if (fake.value.length > real.value.length) {
+    real.value += fake.value[fake.value.length - 1];
+  } else {
+    real.value = real.value.slice(0, -1);
   }
   fake.value = "•".repeat(real.value.length);
 }
 
 // === LOGIN ===
-async function login(){
-  const username = document.getElementById("username").value.trim();
-  const code = document.getElementById("realInput").value.trim();
-
-  if(!username){ 
-    document.getElementById("loginMsg").innerText="❌ Sélectionne un nom d'utilisateur"; 
-    return; 
-  }
-
-  const res = await fetch("/.netlify/functions/login", {
-    method:"POST",
-    body: JSON.stringify({ user: username, code: code })
-  });
-  const data = await res.json();
-  if(data.success){
-    document.getElementById("loginPanel").classList.add("hidden");
-    document.getElementById("adminPanel").classList.remove("hidden");
-    document.getElementById("userDisplay")?.remove();
-    const h2 = document.createElement("h2");
-    h2.id="userDisplay";
-    h2.textContent=username;
-    document.getElementById("adminPanel").prepend(h2);
-    addLog(username+" connecté");
-    updateUsers();
+function login() {
+  const pass = document.getElementById("realInput").value;
+  if (pass === ADMIN_CODE) {
+    localStorage.setItem("connected", "true");
+    localStorage.setItem("lastLogin", new Date().toLocaleString());
+    saveLog("✅ Connexion réussie");
+    location.reload();
   } else {
-    document.getElementById("loginMsg").innerText="❌ Mauvais code";
+    document.getElementById("loginMsg").innerText = "❌ Mauvais code";
   }
 }
 
-// === LOGS ===
-async function addLog(msg){
-  const user = document.getElementById("userDisplay").textContent;
-  await fetch("/.netlify/functions/logs", {
-    method:"POST",
-    body: JSON.stringify({ user: user, message: msg })
-  });
+// === SI CONNECTÉ ===
+if (localStorage.getItem("connected") === "true") {
+  document.getElementById("loginPanel").classList.add("hidden");
+  document.getElementById("adminPanel").classList.remove("hidden");
   loadLogs();
 }
 
-async function loadLogs(){
-  const res = await fetch("/.netlify/functions/logs");
-  const logs = await res.json();
+// === LOGOUT ===
+function logout() {
+  localStorage.removeItem("connected");
+  location.reload();
+}
+
+// === LOGS ===
+function saveLog(text) {
+  let logs = JSON.parse(localStorage.getItem("logs") || "[]");
+  logs.unshift("[" + new Date().toLocaleTimeString() + "] " + text);
+  if (logs.length > 50) logs.pop();
+  localStorage.setItem("logs", JSON.stringify(logs));
+}
+
+function loadLogs() {
+  let logs = JSON.parse(localStorage.getItem("logs") || "[]");
   const logDiv = document.getElementById("log");
-  logDiv.innerHTML="";
-  logs.forEach(l=>{
+  logDiv.innerHTML = "";
+  logs.forEach(l => {
     const div = document.createElement("div");
-    div.textContent=`[${l.time}] ${l.user} : ${l.message}`;
+    div.textContent = l;
     logDiv.appendChild(div);
   });
 }
 
-// === UTILISATEURS CONNECTÉS ===
-async function updateUsers(){
-  const res = await fetch("/.netlify/functions/login");
-  const data = await res.json();
-  const ul = document.getElementById("usersList");
-  ul.innerHTML="";
-  data.users.forEach(u=>{
-    const li = document.createElement("li");
-    li.textContent=u;
-    ul.appendChild(li);
-  });
-}
-
-// === LOGOUT ===
-function logout(){
-  const user = document.getElementById("userDisplay").textContent;
-  addLog(user+" s'est déconnecté");
-  document.getElementById("adminPanel").classList.add("hidden");
-  document.getElementById("loginPanel").classList.remove("hidden");
-}
-
-// === TIMER ===
-function updateCountdown(){
+// === TIMER EVENT ===
+function updateCountdown() {
   const now = new Date();
   const diff = EVENT_DATE - now;
-  if(diff <= 0){ document.getElementById("countdown").innerText="🚨 EVENT EN COURS 🚨"; return; }
-  const d=Math.floor(diff/(1000*60*60*24));
-  const h=Math.floor((diff/(1000*60*60))%24);
-  const m=Math.floor((diff/(1000*60))%60);
-  const s=Math.floor((diff/1000)%60);
-  document.getElementById("countdown").innerText=`${d}j ${h}h ${m}m ${s}s`;
+  if (diff <= 0) {
+    document.getElementById("countdown").innerText = "🚨 EVENT EN COURS 🚨";
+    return;
+  }
+  const d = Math.floor(diff / (1000*60*60*24));
+  const h = Math.floor((diff / 1000 / 60 / 60) % 24);
+  const m = Math.floor((diff / 1000 / 60) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+  document.getElementById("countdown").innerText = `${d}j ${h}h ${m}m ${s}s`;
 }
-setInterval(updateCountdown,1000);
+setInterval(updateCountdown, 1000);
 updateCountdown();
-
-// === AUTO LOAD LOGS / USERS ===
-setInterval(()=>{ loadLogs(); updateUsers(); },5000);
 </script>
+
 </body>
 </html>
