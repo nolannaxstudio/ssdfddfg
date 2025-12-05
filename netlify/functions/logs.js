@@ -1,9 +1,15 @@
 let logs = [];
 
-export async function handler(event) {
-  if(event.httpMethod === "POST"){
-    const body = JSON.parse(event.body);
-    logs.push(body.message);
+exports.handler = async function(event, context) {
+
+  // Si le site ENVOIE un log
+  if (event.httpMethod === "POST") {
+    const data = JSON.parse(event.body);
+    logs.push({
+      user: data.user,
+      message: data.message,
+      time: new Date().toISOString()
+    });
 
     return {
       statusCode: 200,
@@ -11,12 +17,16 @@ export async function handler(event) {
     };
   }
 
-  if(event.httpMethod === "GET"){
+  // Si le site DEMANDE les logs
+  if (event.httpMethod === "GET") {
     return {
       statusCode: 200,
-      body: JSON.stringify({ logs })
+      body: JSON.stringify(logs)
     };
   }
 
-  return { statusCode: 405 };
-}
+  return {
+    statusCode: 405,
+    body: "Method Not Allowed"
+  };
+};
