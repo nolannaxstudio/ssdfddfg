@@ -1,13 +1,10 @@
 let logs = [];
 
-exports.handler = async function(event, context) {
+exports.handler = async function(event) {
   if(event.httpMethod === "POST"){
-    const data = JSON.parse(event.body);
-    logs.push({
-      user: data.user,
-      message: data.message,
-      time: new Date().toISOString()
-    });
+    const { user, message } = JSON.parse(event.body);
+    logs.unshift({ time: new Date().toLocaleTimeString(), user, message });
+    if(logs.length > 50) logs.pop();
     return { statusCode: 200, body: JSON.stringify({ success:true }) };
   }
 
