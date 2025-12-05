@@ -2,11 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Backrooms Admin Panel</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box; font-family:Orbitron, sans-serif}
+*{box-sizing:border-box;font-family:Orbitron, sans-serif}
 body{
 margin:0;
 background:radial-gradient(circle at top, #2b2b00,#000000);
@@ -17,6 +19,7 @@ align-items:center;
 min-height:100vh;
 padding:20px;
 }
+
 .panel{
 width:95%;
 max-width:950px;
@@ -25,41 +28,63 @@ border:2px solid #d6d600;
 border-radius:20px;
 padding:20px;
 box-shadow:0 0 30px #000;
-animation: appear 1s ease-in-out;
 position:relative;
 overflow:hidden;
 }
+
 .panel::after{
 content:"";
 position:absolute;
 inset:0;
 pointer-events:none;
-background:repeating-linear-gradient(0deg,rgba(255,255,0,0.03) 0px,rgba(255,255,0,0.03) 1px,transparent 2px,transparent 4px);
+background:repeating-linear-gradient(
+0deg,
+rgba(255,255,0,0.03) 0px,
+rgba(255,255,0,0.03) 1px,
+transparent 2px,
+transparent 4px
+);
 animation:glitch 0.15s infinite;
 }
-@keyframes appear{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
-@keyframes glitch{0%{transform:translate(0)}20%{transform:translate(-1px,1px)}40%{transform:translate(1px,-1px)}60%{transform:translate(-1px,0)}80%{transform:translate(1px,1px)}100%{transform:translate(0)}}
 
-h1{text-align:center; margin-bottom:10px}
-.section{margin-top:15px; padding-top:10px; border-top:1px dashed #d6d60055}
+@keyframes glitch{
+0%{transform:translate(0)}
+20%{transform:translate(-1px,1px)}
+40%{transform:translate(1px,-1px)}
+60%{transform:translate(-1px,0)}
+80%{transform:translate(1px,1px)}
+100%{transform:translate(0)}
+}
+
+h1{text-align:center;margin-bottom:10px}
+.section{margin-top:15px;padding-top:10px;border-top:1px dashed #d6d60055}
+
 button{
 background:#d6d600;
 border:none;
-padding:12px 16px;
-margin:5px 0;
+padding:12px;
+margin-top:10px;
 border-radius:10px;
 cursor:pointer;
 font-weight:bold;
 width:100%;
 }
+
 button:hover{background:#ffff00}
+
 input{
 width:100%;
 padding:12px;
 border-radius:10px;
 border:none;
 margin:5px 0 10px;
+background:#000;
+color:#d6d600;
+text-align:center;
+letter-spacing:3px;
+font-size:18px;
 }
+
 #log{
 background:black;
 padding:10px;
@@ -68,120 +93,176 @@ height:150px;
 overflow:auto;
 font-size:13px;
 }
+
 .hidden{display:none}
-.timer{font-size:18px; text-align:center; margin-top:8px}
-.small{font-size:13px; opacity:0.8}
+.timer{font-size:18px;text-align:center;margin-top:8px}
+.small{font-size:13px;opacity:0.8}
 ul{margin:5px 0 0 20px}
 </style>
 </head>
+
 <body>
 
 <!-- LOGIN -->
 <div class="panel" id="loginPanel">
-  <h1>🔒 Accès Admin — Backrooms</h1>
-  <p class="small">Code intégré dans la page (mode offline pour admins)</p>
+<h1>🔒 Accès Admin — Backrooms</h1>
+<p class="small">Code intégré</p>
 
-  <input type="text" id="adminPass" placeholder="Code admin" oninput="maskInput()" />
-  <input type="hidden" id="realPass" />
-  <button onclick="login()">Entrer</button>
-  <div id="loginMsg" style="text-align:center;margin-top:5px;"></div>
+<input type="text" id="fakeInput" placeholder="Code admin" oninput="maskInput()">
+<input type="hidden" id="realInput">
 
-  <div class="section">
-    <h3>⏳ Prochain événement admin</h3>
-    <p style="text-align:center">06/12/2025 à 15h</p>
-    <div class="timer" id="countdown">Chargement…</div>
-  </div>
+<button onclick="login()">Entrer</button>
+<div id="loginMsg" style="text-align:center;margin-top:5px;"></div>
+
+<div class="section">
+<h3>⏳ Prochain événement admin</h3>
+<p style="text-align:center">06/12/2025 à 15h</p>
+<div class="timer" id="countdown">Chargement...</div>
 </div>
 
-<!-- PANEL ADMIN -->
+</div>
+
+<!-- ADMIN PANEL -->
 <div class="panel hidden" id="adminPanel">
-  <h1>🎮 Backrooms — Panneau Admin Roblox</h1>
 
-  <div class="section">
-    <h3>👤 Admins autorisés</h3>
-    <ul>
-      <li>nolannax</li>
-      <li>jonahjojoyt</li>
-      <li>Admin_03</li>
-    </ul>
-  </div>
+<h1>🎮 Backrooms - Admins</h1>
 
-  <div class="section">
-    <h3>🎵 Musique (commande : /music [ID])</h3>
-    <ul>
-      <li>Its raining tacos | /music 142376088</li>
-      <li>Nyan Cat | /music 9067256917</li>
-      <li>PASSO BEM SOLTO | /music 132928052197918</li>
-    </ul>
-  </div>
+<button onclick="logout()">🔓 Déconnexion</button>
 
-  <div class="section">
-    <h3>🛑 Règles anti admin abuse</h3>
-    <ul>
-      <li>Pas de spam de commandes</li>
-      <li>Pas de kill abuse sans raison</li>
-      <li>2 avertissements = retrait admin</li>
-      <li>Toutes les actions sont loggées</li>
-    </ul>
-  </div>
+<div class="section">
+<h3>👤 Admins autorisés</h3>
+<ul>
+<li>nolannax</li>
+<li>jonahjojoyt</li>
+<li>Admin_03</li>
+</ul>
+</div>
 
-  <div class="section">
-    <h3>📜 Logs</h3>
-    <div id="log"></div>
-  </div>
+<div class="section">
+<h3>🎵 Musique ( /music ID )</h3>
+<ul>
+<li>Its raining tacos — /music 142376088</li>
+<li>Nyan Cat — /music 9067256917</li>
+<li>PASSO BEM SOLTO — /music 132928052197918</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>📜 Logs de connexion</h3>
+<div id="log"></div>
+</div>
+
 </div>
 
 <script>
+
+// === PARAMÈTRES ===
 const ADMIN_CODE = "Backrooms-ADMIN-2025";
 const EVENT_DATE = new Date("2025-12-06T15:00:00");
-let connected = false;
 
+// === NOUVEL ONGLET = PAS DE SESSION ===
+if(!sessionStorage.getItem("tabOpen")){
+    sessionStorage.setItem("tabOpen","true")
+    localStorage.removeItem("connected")
+}
+
+// === MASQUAGE •••• ===
 function maskInput(){
-  const input = document.getElementById('adminPass');
-  const real = document.getElementById('realPass');
+    const fake = document.getElementById("fakeInput")
+    const real = document.getElementById("realInput")
 
-  if(input.value.length > real.value.length){
-    real.value += input.value[input.value.length - 1];
-  } else if(input.value.length < real.value.length){
-    real.value = real.value.slice(0, -1);
-  }
+    if(fake.value.length > real.value.length){
+        real.value += fake.value[fake.value.length-1]
+    }else{
+        real.value = real.value.slice(0,-1)
+    }
 
-  input.value = '•'.repeat(real.value.length);
+    fake.value = "•".repeat(real.value.length)
 }
 
+// === LOGIN ===
 function login(){
-  const pass = document.getElementById('realPass').value;
-  if(pass === ADMIN_CODE){
-    document.getElementById('loginPanel').classList.add('hidden');
-    document.getElementById('adminPanel').classList.remove('hidden');
-    log('✅ Connecté comme admin');
-    connected = true;
-  } else {
-    document.getElementById('loginMsg').textContent = '❌ Mauvais code';
-  }
+
+    const pass = document.getElementById("realInput").value
+
+    if(pass === ADMIN_CODE){
+
+        localStorage.setItem("connected","true")
+        localStorage.setItem("lastLogin", new Date().toLocaleString())
+
+        saveLog("✅ Connexion réussie")
+
+        location.reload()
+
+    }else{
+        document.getElementById("loginMsg").innerText = "❌ Mauvais code"
+    }
 }
 
+// === SI CONNECTÉ ===
+if(localStorage.getItem("connected") === "true"){
+
+    document.getElementById("loginPanel").classList.add("hidden")
+    document.getElementById("adminPanel").classList.remove("hidden")
+
+    loadLogs()
+}
+
+// === LOGOUT ===
+function logout(){
+    localStorage.removeItem("connected")
+    location.reload()
+}
+
+// === LOGS ===
+function saveLog(text){
+
+    let logs = JSON.parse(localStorage.getItem("logs") || "[]")
+
+    logs.unshift("[" + new Date().toLocaleTimeString() + "] " + text)
+
+    if(logs.length > 50) logs.pop()
+
+    localStorage.setItem("logs",JSON.stringify(logs))
+}
+
+function loadLogs(){
+
+    let logs = JSON.parse(localStorage.getItem("logs") || "[]")
+    const logDiv = document.getElementById("log")
+
+    logDiv.innerHTML = ""
+
+    logs.forEach(l=>{
+        const div = document.createElement("div")
+        div.textContent = l
+        logDiv.appendChild(div)
+    })
+}
+
+// === TIMER EVENT ===
 function updateCountdown(){
-  const now = new Date();
-  const diff = EVENT_DATE - now;
-  if(diff <= 0){
-    document.getElementById('countdown').textContent = "🚨 EVENT EN COURS 🚨";
-    return;
-  }
-  const d = Math.floor(diff / (1000*60*60*24));
-  const h = Math.floor((diff / (1000*60*60)) % 24);
-  const m = Math.floor((diff / (1000*60)) % 60);
-  const s = Math.floor((diff / 1000) % 60);
-  document.getElementById('countdown').textContent = d + "j " + h + "h " + m + "m " + s + "s";
-}
-setInterval(updateCountdown,1000);
-updateCountdown();
 
-function log(text){
-  const div = document.createElement('div');
-  div.textContent = text;
-  document.getElementById('log').appendChild(div);
+    const now = new Date()
+    const diff = EVENT_DATE - now
+
+    if(diff <= 0){
+        document.getElementById("countdown").innerText = "🚨 EVENT EN COURS 🚨"
+        return
+    }
+
+    const d = Math.floor(diff / (1000*60*60*24))
+    const h = Math.floor((diff/1000/60/60)%24)
+    const m = Math.floor((diff/1000/60)%60)
+    const s = Math.floor((diff/1000)%60)
+
+    document.getElementById("countdown").innerText =
+    `${d}j ${h}h ${m}m ${s}s`
 }
+
+setInterval(updateCountdown,1000)
+updateCountdown()
+
 </script>
 </body>
 </html>
