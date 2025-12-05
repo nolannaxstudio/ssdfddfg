@@ -50,7 +50,7 @@ button{
   width:100%;
 }
 button:hover{background:#ffff00;}
-input{
+input, select{
   width:100%;
   padding:12px;
   border-radius:10px;
@@ -82,11 +82,19 @@ ul{margin:5px 0 0 20px;}
 <div class="panel" id="loginPanel">
   <h1>🔒 Accès Admin — Backrooms</h1>
   <p class="small">Connexion + nom d'utilisateur (logs côté serveur)</p>
-  <input type="text" id="username" placeholder="Nom d'utilisateur">
+
+  <select id="username">
+    <option value="">Sélectionne ton nom</option>
+    <option value="nolannax">nolannax</option>
+    <option value="jonahjojoyt">jonahjojoyt</option>
+  </select>
+
   <input type="text" id="fakeInput" placeholder="Code admin" oninput="maskInput()">
   <input type="hidden" id="realInput">
+
   <button onclick="login()">Entrer</button>
   <div id="loginMsg" style="text-align:center;margin-top:5px;"></div>
+
   <div class="section">
     <h3>⏳ Prochain événement admin</h3>
     <p style="text-align:center">06/12/2025 à 15h</p>
@@ -149,7 +157,11 @@ function maskInput(){
 async function login(){
   const username = document.getElementById("username").value.trim();
   const code = document.getElementById("realInput").value.trim();
-  if(!username){ document.getElementById("loginMsg").innerText="Entre un pseudo"; return; }
+
+  if(!username){ 
+    document.getElementById("loginMsg").innerText="❌ Sélectionne un nom d'utilisateur"; 
+    return; 
+  }
 
   const res = await fetch("/.netlify/functions/login", {
     method:"POST",
